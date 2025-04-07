@@ -6,21 +6,47 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-b from-[#665CF0]/5 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Share what you have, find what you need
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Connect with your community to share resources, services, and more. Whether you&apos;re looking to lend, borrow, or buy, CommonTable makes it easy.
-            </p>
-            <Link
-              href="/dashboard"
-              className="inline-block bg-[#665CF0] text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-[#5449d6] transition-colors"
-            >
-              Get Started
-            </Link>
+      <div className="relative isolate">
+        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-7">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                Share Resources, Build Community
+              </h1>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Connect with your church community to share equipment, resources, and expertise. Whether you&apos;re looking to borrow or lend, CommonTable makes it easy.
+              </p>
+              <div className="mt-10 flex items-center gap-x-6">
+                <Link
+                  href="/dashboard"
+                  className="inline-block bg-[#665CF0] text-white px-8 py-4 rounded-lg text-lg font-medium hover:bg-[#5449d6] transition-colors"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+            <div className="lg:col-span-5">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Links</h3>
+                <ul className="space-y-4">
+                  <li>
+                    <Link href="/listings" className="text-[#665CF0] hover:text-[#5449d6]">
+                      Browse Listings
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/post" className="text-[#665CF0] hover:text-[#5449d6]">
+                      Create a Listing
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/dashboard" className="text-[#665CF0] hover:text-[#5449d6]">
+                      View Dashboard
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
