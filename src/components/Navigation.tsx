@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -78,10 +79,12 @@ export default function Navigation() {
           {/* Logo Section - Aligned with Sidebar */}
           <div className="w-64 px-6 py-4 border-r">
             <Link href="/" className="flex items-center">
-              <img 
+              <Image 
                 src="/Logo.png" 
                 alt="CommonTable Logo" 
-                className="h-10 w-auto"
+                width={160}
+                height={40}
+                priority
               />
             </Link>
           </div>
