@@ -27,23 +27,3 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-
-* {
-  cursor: url('/CommonTable/cursor.svg') 16 16, auto !important;
-}
-
-/* Add hover state cursor for interactive elements */
-a:hover,
-button:hover,
-input[type="submit"]:hover,
-select:hover {
-  cursor: url('/CommonTable/cursor.svg') 16 16, pointer !important;
-}
-
-/* Keep text selection cursor for inputs and textareas */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-textarea {
-  cursor: text !important;
-}
