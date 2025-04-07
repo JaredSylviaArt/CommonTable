@@ -1,182 +1,108 @@
-"use client";
-
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { listings } from "@/lib/data";
-import { useState } from "react";
-import Modal from "@/components/Modal";
 
-export default function ListingPage() {
-  const params = useParams();
-  const listingId = params.id as string;
-  const [listing, setListing] = useState(listings.find((l) => l.id === listingId));
-  const [modalOpen, setModalOpen] = useState(false);
+export default async function ListingPage({ params }: { params: { id: string } }) {
+  const listing = listings.find((l) => l.id === params.id);
 
   if (!listing) {
-    return (
-      <div className="max-w-2xl mx-auto p-6">
-        <h1 className="text-2xl font-semibold mb-4">Listing Not Found</h1>
-        <p className="text-gray-600 mb-4">The listing you're looking for doesn't exist.</p>
-        <Link
-          href="/dashboard"
-          className="text-indigo-600 hover:text-indigo-500 font-medium"
-        >
-          Return to Dashboard
-        </Link>
-      </div>
-    );
+    notFound();
   }
 
-  const handleBuyNow = () => {
-    setModalOpen(true);
-  };
-
-  const handleConfirmPurchase = () => {
-    console.log("Purchase confirmed for listing:", listing.id);
-    setListing({
-      ...listing,
-      transactionStatus: 'pending',
-      buyerId: 'current-user-id'
-    });
-    setModalOpen(false);
-  };
-
-  const getTransactionStatusBadge = () => {
-    if (!listing.transactionStatus) return null;
-    
-    const statusColors = {
-      open: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      complete: 'bg-gray-100 text-gray-800'
-    };
-
-    return (
-      <span className={`ml-2 px-2 py-1 text-xs rounded-full font-medium ${statusColors[listing.transactionStatus]}`}>
-        {listing.transactionStatus.charAt(0).toUpperCase() + listing.transactionStatus.slice(1)}
-      </span>
-    );
-  };
-
-  const getOfferTypeBadge = () => {
-    const typeColors = {
-      tangible: 'bg-blue-100 text-blue-800',
-      intangible: 'bg-purple-100 text-purple-800',
-      forSale: 'bg-green-100 text-green-800'
-    };
-
-    const type = listing.isForSale ? 'forSale' : listing.type;
-    return (
-      <span className={`px-2 py-1 text-xs rounded-full font-medium ${typeColors[type]}`}>
-        {listing.isForSale ? 'For Sale' : listing.type === 'tangible' ? 'Giveaway' : 'Loan'}
-      </span>
-    );
-  };
+  const ownerName = listing.owner?.name || `User ${listing.ownerId}`;
 
   return (
-    <div className={`max-w-2xl mx-auto p-6 ${
-      listing.isForSale ? 'border-l-4 border-green-500 pl-8' : ''
-    }`}>
-      <div className="flex items-center">
-        <h1 className="text-2xl font-semibold">{listing.title}</h1>
-        {getTransactionStatusBadge()}
-      </div>
-      
-      {listing.isForSale && (
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <div className="text-lg font-medium text-gray-900">
-            For Sale – ${listing.price}
-          </div>
-          <div className="mt-2 text-sm text-gray-500">
-            CommonTable will facilitate payment and pickup (coming soon)
-          </div>
-          {listing.transactionStatus === 'pending' && (
-            <div className="mt-2 text-sm text-yellow-600">
-              Transaction pending...
-            </div>
-          )}
-          {listing.transactionStatus === 'complete' && (
-            <div className="mt-2 text-sm text-gray-600">
-              This item has been sold
-            </div>
-          )}
-          {(!listing.transactionStatus || listing.transactionStatus === 'open') && (
-            <div className="mt-4 flex space-x-4">
-              <button
-                onClick={handleBuyNow}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-              >
-                Buy Now
-              </button>
-              <Link
-                href={`/chat?listingId=${listing.id}&ownerId=${listing.owner.email}`}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                Message Seller
-              </Link>
-            </div>
-          )}
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-6">
+          <Link
+            href="/listings"
+            className="text-[#665CF0] hover:text-[#5449d6] flex items-center"
+          >
+            <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Listings
+          </Link>
         </div>
-      )}
 
-      <div className="prose max-w-none">
-        <p className="text-gray-600">{listing.description}</p>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <div className="relative w-full h-96 bg-gray-100 rounded-lg overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <svg className="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
+          </div>
 
-      <div className="mt-8 border-t pt-6">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Details</h2>
-        <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
           <div>
-            <dt className="text-sm font-medium text-gray-500">Type</dt>
-            <dd className="mt-1">
-              {getOfferTypeBadge()}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-sm font-medium text-gray-500">Category</dt>
-            <dd className="mt-1 text-sm text-gray-900">{listing.category}</dd>
-          </div>
-          <div>
-            <dt className="text-sm font-medium text-gray-500">Location</dt>
-            <dd className="mt-1 text-sm text-gray-900">{listing.zipCode}</dd>
-          </div>
-          <div>
-            <dt className="text-sm font-medium text-gray-500">Posted</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {new Date(listing.createdAt).toLocaleDateString()}
-            </dd>
-          </div>
-        </dl>
-      </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{listing.title}</h1>
+            <p className="text-gray-500 mb-6">{listing.description}</p>
 
-      <div className="mt-8 border-t pt-6">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Owner</h2>
-        <div className="space-y-1">
-          <p className="text-sm text-gray-900">{listing.owner.name}</p>
-          <p className="text-sm text-gray-500">{listing.owner.email}</p>
+            <div className="bg-white rounded-lg p-6 mb-6">
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <p className="text-sm text-gray-500">Type</p>
+                  <p className="font-medium text-gray-900">
+                    {listing.type === "tangible" ? "Physical Item" : "Service"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="font-medium text-gray-900">{listing.status}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Location</p>
+                  <p className="font-medium text-gray-900">{listing.location}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Owner</p>
+                  <p className="font-medium text-gray-900">{ownerName}</p>
+                </div>
+              </div>
+
+              {listing.isForSale ? (
+                <div>
+                  <p className="text-2xl font-bold text-[#665CF0]">
+                    ${listing.price}
+                  </p>
+                  <button className="w-full bg-[#665CF0] text-white py-3 px-6 rounded-lg hover:bg-[#5449d6] transition-colors">
+                    Purchase
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <button className="w-full bg-[#665CF0] text-white py-3 px-6 rounded-lg hover:bg-[#5449d6] transition-colors">
+                    Request to Borrow
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white rounded-lg p-6">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">Details</h2>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Condition</p>
+                  <p className="font-medium text-gray-900">{listing.condition}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Availability</p>
+                  <p className="font-medium text-gray-900">{listing.availability}</p>
+                </div>
+                {listing.duration && (
+                  <div>
+                    <p className="text-sm text-gray-500">Duration</p>
+                    <p className="font-medium text-gray-900">{listing.duration}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {listing.buyerId && (
-        <div className="mt-8 border-t pt-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Buyer</h2>
-          <div className="space-y-1">
-            <p className="text-sm text-gray-900">User ID: {listing.buyerId}</p>
-          </div>
-        </div>
-      )}
-
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}>
-        <h2 className="text-xl font-bold mb-2">Purchase Coming Soon</h2>
-        <p className="text-gray-600 mb-4">
-          CommonTable will soon handle secure payments and delivery confirmation for for-sale items. This feature is not live yet.
-        </p>
-        <button
-          onClick={() => setModalOpen(false)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Got it
-        </button>
-      </Modal>
     </div>
   );
 } 
