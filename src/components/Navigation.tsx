@@ -80,7 +80,7 @@ export default function Navigation() {
           <div className="w-[256px] min-w-[256px] px-6 flex items-center border-r border-gray-200">
             <Link href="/">
               <Image
-                src="/CommonTable/Logo.png"
+                src="/logo.png"
                 alt="CommonTable Logo"
                 width={160}
                 height={40}
