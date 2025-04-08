@@ -14,11 +14,17 @@ export default function DashboardPage() {
       if (activeTab === "Newest") {
         return true; // Show all for newest
       } else if (activeTab === "Popular") {
-        return listing.popularityScore > 0 || listing.isForSale || listing.isGiveaway; // Show popular items, for sale, and giveaways
+        // Show items with high popularity score or special status
+        return listing.popularityScore >= 5 || listing.isForSale || listing.isGiveaway;
       } else if (activeTab === "My Listings") {
         return listing.ownerId === "1"; // Show user's listings
       }
       return true;
+    })
+    .filter((listing) => {
+      // Filter by location
+      if (selectedLocation === "All Locations") return true;
+      return listing.location.includes(selectedLocation);
     })
     .sort((a, b) => {
       // Sort by date for newest
@@ -27,9 +33,12 @@ export default function DashboardPage() {
       }
       // Sort by popularity for popular
       if (activeTab === "Popular") {
-        return b.popularityScore - a.popularityScore;
+        const aScore = a.popularityScore + (a.isForSale ? 3 : 0) + (a.isGiveaway ? 2 : 0);
+        const bScore = b.popularityScore + (b.isForSale ? 3 : 0) + (b.isGiveaway ? 2 : 0);
+        return bScore - aScore;
       }
-      return 0;
+      // Sort by date for my listings
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
   return (

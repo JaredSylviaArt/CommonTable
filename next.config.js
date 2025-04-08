@@ -1,18 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  basePath: '/CommonTable',
   images: {
     unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-    ],
   },
-  reactStrictMode: true,
-  basePath: '/CommonTable',
-  assetPrefix: '/CommonTable/',
+  // Remove any other conflicting options like swcMinify
 }
 
 module.exports = nextConfig 
