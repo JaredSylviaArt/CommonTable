@@ -6,7 +6,9 @@
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
 
 [build.environment]
   NEXT_PUBLIC_BASE_PATH = ""
-  NODE_VERSION = "20" 
+  NODE_VERSION = "20"
+  NEXT_TELEMETRY_DISABLED = "1" 
