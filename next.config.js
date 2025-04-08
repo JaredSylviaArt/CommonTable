@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -11,7 +10,6 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
-  swcMinify: true,
   basePath: '/CommonTable',
   assetPrefix: '/CommonTable/',
 }

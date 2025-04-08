@@ -1,12 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { listings } from "@/lib/data";
 import ListingCard from "@/components/ListingCard";
 
 export default function CommunityListingsPage() {
   const [selectedType, setSelectedType] = useState("All Types");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+
+  const filteredListings = listings
+    .filter((listing) => {
+      // Filter by type
+      if (selectedType === "All Types") return true;
+      if (selectedType === "Tangible") return listing.type === "tangible";
+      if (selectedType === "Intangible") return listing.type === "intangible";
+      return true;
+    })
+    .filter((listing) => {
+      // Filter by search query
+      if (!searchQuery) return true;
+      const query = searchQuery.toLowerCase();
+      return (
+        listing.title.toLowerCase().includes(query) ||
+        listing.description.toLowerCase().includes(query) ||
+        (listing.category && listing.category.toLowerCase().includes(query))
+      );
+    });
 
   return (
     <div className="p-6">
@@ -15,6 +37,16 @@ export default function CommunityListingsPage() {
       {/* Filters */}
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setSelectedType("All Types")}
+            className={`px-3 py-1.5 text-sm font-medium rounded-full ${
+              selectedType === "All Types"
+                ? "bg-purple-100 text-purple-700"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            All Types
+          </button>
           <button
             onClick={() => setSelectedType("Tangible")}
             className={`px-3 py-1.5 text-sm font-medium rounded-full ${
@@ -53,7 +85,7 @@ export default function CommunityListingsPage() {
 
       {/* Listings Grid */}
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {listings.map((listing) => (
+        {filteredListings.map((listing) => (
           <ListingCard key={listing.id} listing={listing} />
         ))}
       </div>

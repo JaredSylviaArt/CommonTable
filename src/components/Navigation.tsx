@@ -18,10 +18,10 @@ export default function Navigation() {
   };
 
   return (
-    <>
+    <div className="fixed top-0 left-0 right-0 z-50">
       {/* Location Bar */}
-      <div className="bg-[#665CF0] py-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div className="bg-[#665CF0] py-2">
+        <div className="flex justify-between items-center">
           <div className="flex items-center pl-[72px]">
             <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -29,7 +29,7 @@ export default function Navigation() {
             </svg>
             <span className="ml-2 text-white text-sm font-medium">Orlando, FL 32806</span>
           </div>
-          <div className="relative">
+          <div className="relative pr-4">
             <button 
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="text-white text-sm font-medium flex items-center hover:bg-white/10 px-3 py-1 rounded-lg transition-colors"
@@ -73,12 +73,12 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Main Header */}
-      <header className="bg-white border-b">
-        <div className="flex items-center">
-          {/* Logo Section - Aligned with Sidebar */}
-          <div className="w-64 px-6 py-4 border-r">
-            <Link href="/" className="flex items-center">
+      {/* Main Navigation */}
+      <nav className="bg-white border-b border-gray-200">
+        <div className="flex h-16">
+          {/* Logo Section - Fixed width aligned with Sidebar */}
+          <div className="w-[256px] min-w-[256px] px-6 flex items-center border-r border-gray-200">
+            <Link href="/">
               <Image
                 src="/CommonTable/Logo.png"
                 alt="CommonTable Logo"
@@ -89,44 +89,50 @@ export default function Navigation() {
             </Link>
           </div>
 
-          {/* Search and Post Button Section */}
-          <div className="flex-1 px-6 py-4">
-            <div className="max-w-2xl mx-auto flex items-center gap-4">
-              <form onSubmit={handleSearch} className="flex-1 flex gap-2">
-                <div className="relative flex-1">
+          <div className="flex-1 flex items-center justify-between px-6">
+            <div className="max-w-lg w-full">
+              <form onSubmit={handleSearch} className="relative">
+                <div className="relative">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search for items, services, or categories..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#665CF0] focus:border-[#665CF0] shadow-sm"
+                    className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg leading-5 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-[#665CF0] focus:border-[#665CF0] sm:text-sm"
+                    placeholder="Search listings..."
                   />
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <button
+                    type="submit"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                  >
+                    <svg
+                      className="h-5 w-5 text-gray-400"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      />
                     </svg>
-                  </div>
+                  </button>
                 </div>
-                <button
-                  type="submit"
-                  className="bg-[#665CF0] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#5449d6] transition-colors shadow-sm flex items-center gap-2"
-                >
-                  Search
-                </button>
               </form>
+            </div>
+
+            <div className="flex items-center ml-6">
               <Link
                 href="/post"
-                className="bg-[#665CF0] text-white px-5 py-2.5 rounded-lg font-medium hover:bg-[#5449d6] transition-colors shadow-sm flex items-center gap-2"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#665CF0] hover:bg-[#5549F0] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#665CF0]"
               >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Post
+                Post a Listing
               </Link>
             </div>
           </div>
         </div>
-      </header>
-    </>
+      </nav>
+    </div>
   );
 } 

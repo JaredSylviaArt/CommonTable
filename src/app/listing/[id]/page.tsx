@@ -2,8 +2,15 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { listings } from "@/lib/data";
 
-export default async function ListingPage({ params }: { params: { id: string } }) {
-  const listing = listings.find((l) => l.id === params.id);
+// Generate static params for all listings
+export function generateStaticParams() {
+  return listings.map((listing) => ({
+    id: listing.id.toString(),
+  }));
+}
+
+export default function ListingPage({ params }: { params: { id: string } }) {
+  const listing = listings.find((l) => l.id.toString() === params.id);
 
   if (!listing) {
     notFound();

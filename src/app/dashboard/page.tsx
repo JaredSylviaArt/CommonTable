@@ -6,10 +6,31 @@ import ListingCard from "@/components/ListingCard";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("Newest");
-  const [selectedType, setSelectedType] = useState("All Types");
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
 
-  const filteredListings = listings;
+  const filteredListings = listings
+    .filter((listing) => {
+      // Filter by tab
+      if (activeTab === "Newest") {
+        return true; // Show all for newest
+      } else if (activeTab === "Popular") {
+        return listing.popularityScore > 0 || listing.isForSale || listing.isGiveaway; // Show popular items, for sale, and giveaways
+      } else if (activeTab === "My Listings") {
+        return listing.ownerId === "1"; // Show user's listings
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort by date for newest
+      if (activeTab === "Newest") {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      // Sort by popularity for popular
+      if (activeTab === "Popular") {
+        return b.popularityScore - a.popularityScore;
+      }
+      return 0;
+    });
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -35,32 +56,8 @@ export default function DashboardPage() {
         </nav>
       </div>
 
-      {/* Filters */}
+      {/* Location Filter */}
       <div className="flex items-center gap-4 mt-6">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setSelectedType("Tangible")}
-            className={`px-4 py-2 text-sm font-medium rounded-lg ${
-              selectedType === "Tangible"
-                ? "bg-[#665CF0] text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            Tangible
-            <span className="ml-2 text-xs bg-white/20 px-1.5 py-0.5 rounded">221</span>
-          </button>
-          <button
-            onClick={() => setSelectedType("Intangible")}
-            className={`px-4 py-2 text-sm font-medium rounded-lg ${
-              selectedType === "Intangible"
-                ? "bg-[#665CF0] text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            Intangible
-          </button>
-        </div>
-
         <div className="flex-1" />
 
         <select
