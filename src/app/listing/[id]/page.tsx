@@ -3,7 +3,7 @@ import Link from "next/link";
 import { listings } from "@/lib/data";
 
 // Generate static params for all listings
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return listings.map((listing) => ({
     id: listing.id.toString(),
   }));
