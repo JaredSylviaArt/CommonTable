@@ -24,7 +24,10 @@ export default function AdminPage() {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Admin Dashboard
+          <span className="inline-block w-10 h-1 bg-[#E6FF02] ml-1 align-middle"></span>
+        </h1>
         <Link
           href="/dashboard"
           className="text-sm text-indigo-600 hover:text-indigo-500"
@@ -89,7 +92,7 @@ export default function AdminPage() {
                       onClick={() => handleFeature(listing.id)}
                       className={`${
                         featuredListings.includes(listing.id)
-                          ? "bg-indigo-600 text-white"
+                          ? "bg-[#665CF0] text-white ring-2 ring-[#E6FF02]"
                           : "text-indigo-600 hover:text-indigo-900"
                       } px-3 py-1 rounded-md text-sm font-medium`}
                     >

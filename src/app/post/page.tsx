@@ -10,8 +10,12 @@ export default function PostPage() {
   const router = useRouter();
   const [showToast, setShowToast] = useState(false);
   const [formData, setFormData] = useState<Partial<Listing>>({
+    title: "",
+    description: "",
     type: "tangible",
     isForSale: false,
+    price: 0,
+    zipCode: "90210",
   });
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -21,10 +25,34 @@ export default function PostPage() {
     console.log("New listing:", formData);
     setShowToast(true);
     setFormData({
+      title: "",
+      description: "",
       type: "tangible",
       isForSale: false,
+      price: 0,
+      zipCode: "90210",
     });
     setTimeout(() => router.push("/dashboard"), 2000);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
+    if (type === 'checkbox') {
+      setFormData({
+        ...formData,
+        [name]: (e.target as HTMLInputElement).checked
+      });
+    } else if (type === 'radio') {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +70,7 @@ export default function PostPage() {
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-semibold text-gray-900 mb-6">Create New Listing</h1>
 
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         {/* Image Upload */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -115,8 +143,12 @@ export default function PostPage() {
           <input
             type="text"
             id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-[#665CF0] focus:border-[#665CF0] sm:text-sm"
             placeholder="Enter listing title"
+            required
           />
         </div>
 
@@ -126,9 +158,13 @@ export default function PostPage() {
           </label>
           <textarea
             id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
             rows={4}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-[#665CF0] focus:border-[#665CF0] sm:text-sm"
             placeholder="Describe your listing"
+            required
           />
         </div>
 
@@ -142,6 +178,8 @@ export default function PostPage() {
                 type="radio"
                 name="type"
                 value="tangible"
+                checked={formData.type === "tangible"}
+                onChange={handleChange}
                 className="text-[#665CF0] focus:ring-[#665CF0]"
               />
               <span className="ml-2 text-sm text-gray-900">Tangible</span>
@@ -151,6 +189,8 @@ export default function PostPage() {
                 type="radio"
                 name="type"
                 value="intangible"
+                checked={formData.type === "intangible"}
+                onChange={handleChange}
                 className="text-[#665CF0] focus:ring-[#665CF0]"
               />
               <span className="ml-2 text-sm text-gray-900">Intangible</span>
@@ -166,8 +206,9 @@ export default function PostPage() {
             <label className="inline-flex items-center">
               <input
                 type="checkbox"
+                name="isForSale"
                 checked={formData.isForSale}
-                onChange={(e) => setFormData({ ...formData, isForSale: e.target.checked })}
+                onChange={handleChange}
                 className="text-[#665CF0] focus:ring-[#665CF0]"
               />
               <span className="ml-2 text-sm text-gray-900">For Sale</span>
@@ -185,26 +226,34 @@ export default function PostPage() {
                 <span className="text-gray-500 sm:text-sm">$</span>
               </div>
               <input
-                type="text"
+                type="number"
                 id="price"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
                 className="mt-1 block w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-[#665CF0] focus:border-[#665CF0] sm:text-sm"
                 placeholder="0.00"
+                min="0"
+                step="0.01"
               />
             </div>
           </div>
         )}
 
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
             Location
           </label>
           <select
-            id="location"
+            id="zipCode"
+            name="zipCode"
+            value={formData.zipCode}
+            onChange={handleChange}
             className="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-[#665CF0] focus:border-[#665CF0] sm:text-sm"
           >
-            <option>90210</option>
-            <option>90211</option>
-            <option>90212</option>
+            <option value="90210">90210</option>
+            <option value="90211">90211</option>
+            <option value="90212">90212</option>
           </select>
         </div>
 

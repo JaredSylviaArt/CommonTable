@@ -11,7 +11,10 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-7">
               <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                Share Resources, Build Community
+                Share Resources, <span className="relative inline-block">
+                  Build Community
+                  <span className="absolute inset-x-0 bottom-0 h-2 bg-[#E6FF02]"></span>
+                </span>
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600">
                 Connect with your church community to share equipment, resources, and expertise. Whether you're looking to borrow, sell, or lend, CommonTable makes it easy.
@@ -55,7 +58,7 @@ export default function Home() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div className="w-12 h-12 bg-[#665CF0]/10 rounded-lg flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-[#E6FF02] bg-opacity-30 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-[#665CF0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
