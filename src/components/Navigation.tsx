@@ -4,16 +4,28 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const { currentUser, userProfile, signOut } = useAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/listings?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/');
+      setIsDropdownOpen(false);
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
@@ -30,39 +42,60 @@ export default function Navigation() {
             <span className="ml-2 text-white text-sm font-medium">Orlando, FL 32806</span>
           </div>
           <div className="relative pr-4">
-            <button 
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="text-white text-sm font-medium flex items-center hover:bg-white/10 px-3 py-1 rounded-lg transition-colors"
-            >
-              My Account
-              <svg className={`ml-1 h-4 w-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+            {currentUser ? (
+              <button 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="text-white text-sm font-medium flex items-center hover:bg-white/10 px-3 py-1 rounded-lg transition-colors"
+              >
+                {userProfile?.name || currentUser.displayName || 'My Account'}
+                <svg className={`ml-1 h-4 w-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            ) : (
+              <div className="flex space-x-2">
+                <Link 
+                  href="/login"
+                  className="text-white text-sm font-medium hover:bg-white/10 px-3 py-1 rounded-lg transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  href="/signup"
+                  className="text-white text-sm font-medium bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
 
             {/* Dropdown Menu */}
-            {isDropdownOpen && (
+            {isDropdownOpen && currentUser && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-50">
                 <Link
                   href="/my-listings"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsDropdownOpen(false)}
                 >
                   My Listings
                 </Link>
                 <Link
                   href="/inbox"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsDropdownOpen(false)}
                 >
                   Messages
                 </Link>
                 <Link
                   href="/settings"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  onClick={() => setIsDropdownOpen(false)}
                 >
                   Settings
                 </Link>
                 <div className="border-t border-gray-100 my-1"></div>
                 <button
+                  onClick={handleSignOut}
                   className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
                 >
                   Sign Out
@@ -124,7 +157,7 @@ export default function Navigation() {
 
             <div className="flex items-center ml-6">
               <Link
-                href="/post"
+                href={currentUser ? "/post" : "/login?redirect=/post"}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#665CF0] hover:bg-[#5549F0] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#665CF0]"
               >
                 Post a Listing

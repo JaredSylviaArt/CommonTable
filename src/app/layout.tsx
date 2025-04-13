@@ -5,6 +5,9 @@ import Navigation from "@/components/Navigation"
 import Sidebar from "@/components/Sidebar"
 import type { Metadata } from 'next'
 import { Inter } from "next/font/google"
+import { AuthProvider } from '@/context/AuthContext'
+import { FirestoreProvider } from '@/context/FirestoreContext'
+import ClientOnlyProvider from '@/components/ClientOnlyProvider'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -21,13 +24,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} ${inter.className}`}>
       <body className="min-h-screen flex flex-col">
-        <Navigation />
-        <div className="flex flex-1 pt-[104px]">
-          <Sidebar />
-          <main className="flex-1 bg-white">
-            {children}
-          </main>
-        </div>
+        <ClientOnlyProvider>
+          <AuthProvider>
+            <FirestoreProvider>
+              <Navigation />
+              <div className="flex flex-1 pt-[104px]">
+                <Sidebar />
+                <main className="flex-1 bg-white">
+                  {children}
+                </main>
+              </div>
+            </FirestoreProvider>
+          </AuthProvider>
+        </ClientOnlyProvider>
       </body>
     </html>
   )
