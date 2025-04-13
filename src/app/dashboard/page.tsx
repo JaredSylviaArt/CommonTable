@@ -5,88 +5,112 @@ import { listings } from "@/lib/data";
 import ListingCard from "@/components/ListingCard";
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState("Newest");
-  const [selectedLocation, setSelectedLocation] = useState("All Locations");
+  const [activeTab, setActiveTab] = useState<"newest" | "popular" | "my">("newest");
+  const [selectedType, setSelectedType] = useState<string>("All Types");
+  const [selectedLocation, setSelectedLocation] = useState<string>("All Locations");
 
   const filteredListings = listings
-    .filter((listing) => {
-      // Filter by tab
-      if (activeTab === "Newest") {
-        return true; // Show all for newest
-      } else if (activeTab === "Popular") {
-        // Show items with high popularity score or special status
-        return listing.popularityScore >= 5 || (listing.isForSale === true);
-      } else if (activeTab === "My Listings") {
-        return listing.ownerId === "1" || listing.ownerId === 1; // Show user's listings
-      }
-      return true;
-    })
-    .filter((listing) => {
-      // Filter by location
-      if (selectedLocation === "All Locations") return true;
-      if (!listing.location && !listing.zipCode) return false;
-      return (listing.location?.includes(selectedLocation) || listing.zipCode?.includes(selectedLocation));
-    })
+    .filter(listing => 
+      (selectedType === "All Types" || listing.type === selectedType) &&
+      (selectedLocation === "All Locations" || listing.location === selectedLocation)
+    )
     .sort((a, b) => {
-      // Sort by date for newest
-      if (activeTab === "Newest") {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (activeTab === "newest") {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      } else if (activeTab === "popular") {
+        return b.popularity - a.popularity;
       }
-      // Sort by popularity for popular
-      if (activeTab === "Popular") {
-        const aScore = a.popularityScore + (a.isForSale ? 3 : 0);
-        const bScore = b.popularityScore + (b.isForSale ? 3 : 0);
-        return bScore - aScore;
-      }
-      // Sort by date for my listings
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
     });
 
-  return (
-    <div className="p-6 max-w-7xl mx-auto">
-      {/* Tabs */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
-          {["Newest", "Popular", "My Listings"].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`
-                whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm
-                ${
-                  activeTab === tab
-                    ? "border-[#665CF0] text-[#665CF0] after:content-[''] after:block after:w-1/3 after:h-1 after:bg-[#E6FF02] after:mx-auto after:mt-1"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }
-              `}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      </div>
+  const myListings = activeTab === "my" 
+    ? filteredListings.filter(listing => listing.ownerId === 1) 
+    : filteredListings;
 
-      {/* Location Filter */}
-      <div className="flex items-center gap-4 mt-6">
-        <div className="flex-1" />
+  const listingsToShow = activeTab === "my" ? myListings : filteredListings;
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
+      
+      <div className="flex space-x-4 mb-6">
+        <button
+          className={`px-4 py-2 rounded-lg ${
+            activeTab === "newest" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+          }`}
+          onClick={() => setActiveTab("newest")}
+        >
+          Newest
+        </button>
+        <button
+          className={`px-4 py-2 rounded-lg ${
+            activeTab === "popular" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+          }`}
+          onClick={() => setActiveTab("popular")}
+        >
+          Popular
+        </button>
+        <button
+          className={`px-4 py-2 rounded-lg ${
+            activeTab === "my" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+          }`}
+          onClick={() => setActiveTab("my")}
+        >
+          My Listings
+        </button>
+      </div>
+      
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="flex space-x-2">
+          <button
+            className={`px-4 py-2 text-sm rounded-lg ${
+              selectedType === "All Types" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => setSelectedType("All Types")}
+          >
+            All Types
+          </button>
+          <button
+            className={`px-4 py-2 text-sm rounded-lg ${
+              selectedType === "Tangible" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => setSelectedType("Tangible")}
+          >
+            Tangible
+          </button>
+          <button
+            className={`px-4 py-2 text-sm rounded-lg ${
+              selectedType === "Intangible" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => setSelectedType("Intangible")}
+          >
+            Intangible
+          </button>
+        </div>
 
         <select
+          className="border rounded-lg px-4 py-2 bg-white text-gray-700"
           value={selectedLocation}
           onChange={(e) => setSelectedLocation(e.target.value)}
-          className="block rounded-lg border-gray-200 py-2 pl-3 pr-10 text-sm focus:border-[#665CF0] focus:outline-none focus:ring-[#665CF0]"
         >
-          <option>All Locations</option>
-          <option>90210</option>
-          <option>90211</option>
-          <option>90212</option>
+          <option value="All Locations">All Locations</option>
+          <option value="San Francisco, CA">San Francisco, CA</option>
+          <option value="New York, NY">New York, NY</option>
+          <option value="Austin, TX">Austin, TX</option>
+          <option value="Seattle, WA">Seattle, WA</option>
         </select>
       </div>
 
-      {/* Listings Grid */}
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredListings.map((listing) => (
-          <ListingCard key={listing.id} listing={listing} />
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {listingsToShow.length > 0 ? (
+          listingsToShow.map((listing) => (
+            <ListingCard key={listing.id} listing={listing} />
+          ))
+        ) : (
+          <div className="col-span-3 text-center py-12">
+            <p className="text-gray-500">No listings found.</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,12 +1,35 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { listings } from "@/lib/data";
+import { Metadata } from "next";
 
 // Generate static params for all listings
 export async function generateStaticParams() {
   return listings.map((listing) => ({
     id: listing.id.toString(),
   }));
+}
+
+// Generate metadata for each listing page dynamically
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const listing = listings.find((l) => l.id.toString() === params.id);
+  
+  if (!listing) {
+    return {
+      title: "Listing Not Found - CommonTable",
+      description: "The requested listing could not be found.",
+    };
+  }
+  
+  return {
+    title: `${listing.title} - CommonTable`,
+    description: listing.description,
+    openGraph: {
+      title: `${listing.title} - CommonTable`,
+      description: listing.description,
+      images: ['/images/og-image.jpg'],
+    },
+  };
 }
 
 export default function ListingPage({ params }: { params: { id: string } }) {
