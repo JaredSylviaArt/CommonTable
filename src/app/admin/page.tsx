@@ -78,8 +78,8 @@ export default function AdminPage() {
                     {listing.category}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{listing.owner.name}</div>
-                    <div className="text-sm text-gray-500">{listing.owner.email}</div>
+                    <div className="text-sm text-gray-900">{listing.owner?.name || listing.ownerId || 'Unknown'}</div>
+                    <div className="text-sm text-gray-500">{listing.owner?.email || 'No email'}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(listing.createdAt).toLocaleDateString()}
