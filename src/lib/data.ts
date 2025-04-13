@@ -4,18 +4,31 @@ export type Listing = {
   description: string;
   type: "tangible" | "intangible";
   category: string;
-  createdAt: string;
+  createdAt: string | Date;
   popularityScore: number;
   zipCode: string;
-  owner: {
+  owner?: {
     name: string;
     email: string;
   };
   isForSale?: boolean;
   price?: number;
   transactionStatus?: 'open' | 'pending' | 'complete';
-  buyerId?: string;
+  buyerId?: string | null;
   tags?: string[];
+  location?: string;
+  ownerId?: string | number;
+  offerType?: string;
+  status?: string;
+  imageUrl?: string;
+  condition?: string;
+  duration?: string;
+  availability?: string;
+  lenderId?: string | null;
+  borrowerId?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  reviews?: any[];
 };
 
 export const listings: Listing[] = [
