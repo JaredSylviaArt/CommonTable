@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
-import { Listing } from "@/lib/data";
+import { Listing, addListing } from "@/lib/data";
 import Image from "next/image";
 
 export default function PostPage() {
@@ -21,9 +21,15 @@ export default function PostPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send to an API
-    console.log("New listing:", formData);
+    
+    // Add the listing to the data store
+    const newListing = addListing(formData);
+    console.log("New listing added:", newListing);
+    
+    // Show success message
     setShowToast(true);
+    
+    // Reset the form
     setFormData({
       title: "",
       description: "",
@@ -32,7 +38,10 @@ export default function PostPage() {
       price: 0,
       zipCode: "90210",
     });
-    setTimeout(() => router.push("/dashboard"), 2000);
+    setSelectedImage(null);
+    
+    // Redirect after a short delay
+    setTimeout(() => router.push("/my-listings"), 1500);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

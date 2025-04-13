@@ -456,4 +456,27 @@ export const listings: Listing[] = [
     reviews: [],
     isForSale: false
   }
-]; 
+];
+
+export function addListing(listing: Partial<Listing>) {
+  const newListing: Listing = {
+    id: (listings.length + 1).toString(),
+    title: listing.title || "Untitled Listing",
+    description: listing.description || "",
+    type: listing.type || "tangible",
+    category: listing.category || "Miscellaneous",
+    createdAt: new Date().toISOString(),
+    popularityScore: 0,
+    zipCode: listing.zipCode || "90210",
+    owner: {
+      name: "Current User",
+      email: "user@example.com"
+    },
+    isForSale: listing.isForSale || false,
+    price: listing.price || 0,
+    ownerId: "1"  // Current user ID
+  };
+  
+  listings.unshift(newListing); // Add to beginning of array
+  return newListing;
+} 
